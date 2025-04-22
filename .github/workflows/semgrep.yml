@@ -23,7 +23,7 @@ jobs:
 
       - name: Ejecutar Semgrep y generar archivo JSON
         run: |
-          semgrep scan --config="p/default" --json --output semgrep.json --metrics=off --error=none
+          semgrep scan --config="p/default" --json --output semgrep.json --metrics=off || true
           prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep
 
       - name: Mover reporte HTML a carpeta para GitHub Pages
