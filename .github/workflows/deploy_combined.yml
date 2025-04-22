@@ -40,7 +40,10 @@ jobs:
         with:
           name: semgrep-report
           path: temp/semgrep
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+          
       - name: Unificar contenido para GitHub Pages
         run: |
           mkdir -p public/docs
