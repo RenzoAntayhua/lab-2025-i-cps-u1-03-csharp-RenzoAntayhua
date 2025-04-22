@@ -10,6 +10,7 @@ permissions:
   pages: write
   id-token: write
 
+
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -33,9 +34,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: docfx-docs
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           path: temp/docfx
+          run-id: ${{ github.run_id }}
 
       - name: Descargar artefactos de Semgrep
         uses: actions/download-artifact@v4
