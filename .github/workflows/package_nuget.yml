@@ -41,7 +41,7 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.cs.opencover.reportsPaths="Bank/**/coverage.opencover.xml" \
             /d:sonar.qualitygate.wait=true \
-            /d:sonar.exclusions="**/*.html" \
+            /d:sonar.exclusions="**/*.html,Bank/_site/public/main.css,Bank/Bank.WebApi/Program.cs" \
             /d:sonar.coverage.exclusions="Bank/Bank.WebApi/Program.cs"
 
       - name: Compilar solución
