@@ -22,9 +22,11 @@ jobs:
           pip install semgrep prospector2html
 
       - name: Ejecutar Semgrep y generar archivo JSON
-        run: |
-          semgrep scan --config="p/default" --json --output semgrep.json --metrics=off || true
-          prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep
+        run: semgrep scan --config="p/default" --json --output semgrep.json --metrics=off
+        shell: bash
+
+      - name: Convert semgrep.json to HTML
+        run: prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep
 
       - name: Mover reporte HTML a carpeta para GitHub Pages
         run: |
