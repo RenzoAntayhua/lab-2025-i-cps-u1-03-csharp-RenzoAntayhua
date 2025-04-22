@@ -22,13 +22,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Descargar artefactos de DocFx
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docfx-docs
           path: temp/docfx
 
       - name: Descargar artefactos de Semgrep
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: semgrep-report
           path: temp/semgrep
