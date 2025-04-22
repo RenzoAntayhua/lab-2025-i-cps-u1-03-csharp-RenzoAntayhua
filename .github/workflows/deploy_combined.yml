@@ -35,15 +35,31 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Descargar artefactos de Semgrep
-        uses: actions/download-artifact@v4
-        with:
-          name: semgrep-report
-          path: temp/semgrep
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
-          
+      - name: Descargar semgrep-report via gh
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            # 1) Find the most recent successful Semgrep Analysis run on main
+            run_id=$(gh run list \
+              --workflow "Semgrep Analysis" \
+              --branch main \
+              --limit 5 \
+              --json databaseId,conclusion \
+              --jq '.[] | select(.conclusion=="success") | .databaseId' \
+              | head -n1)
+        
+            if [ -z "$run_id" ]; then
+              echo "No successful Semgrep Analysis run found" >&2
+              exit 1
+            fi
+        
+            echo "Downloading semgrep-report from run $run_id"
+            # 2) Download the named artifact
+            gh run download "$run_id" \
+              --name semgrep-report \
+              --dir temp/semgrep
+        
+
       - name: Unificar contenido para GitHub Pages
         run: |
           mkdir -p public/docs
