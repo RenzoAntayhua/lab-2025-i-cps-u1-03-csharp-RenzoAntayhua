@@ -1,12 +1,9 @@
 name: Deploy Combined to GitHub Pages
 
 on:
-  workflow_run:
-    workflows:
-      - Publish Docs
-      - Semgrep Analysis
-    types:
-      - completed
+    workflow_run:
+      workflows: ["Publish Docs"]
+      types: [completed]
 
 permissions:
   contents: write
@@ -36,8 +33,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: docfx-docs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
           path: temp/docfx
-          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Descargar artefactos de Semgrep
         uses: actions/download-artifact@v4
