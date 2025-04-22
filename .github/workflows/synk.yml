@@ -2,6 +2,11 @@ name: Semgrep Analysis
 env:
   DOTNET_VERSION: '8.x'                     # la versión de .NET
 on: push
+
+permissions:
+  contents: read
+  security-events: write
+  
 jobs:
   security:
     runs-on: ubuntu-latest
