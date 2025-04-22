@@ -2,9 +2,16 @@ name: Deploy Combined to GitHub Pages
 
 on:
   workflow_run:
-    workflows: ["Publish Docs", "Semgrep Analysis"]
+    workflows:
+      - Publish Docs
+      - Semgrep Analysis
     types:
       - completed
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
@@ -14,19 +21,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download artifacts
+      - name: Descargar artefactos de DocFx
         uses: actions/download-artifact@v3
         with:
-          path: ./artifacts
+          name: docfx-docs
+          path: temp/docfx
 
-      - name: Prepare combined site
+      - name: Descargar artefactos de Semgrep
+        uses: actions/download-artifact@v3
+        with:
+          name: semgrep-report
+          path: temp/semgrep
+
+      - name: Unificar contenido para GitHub Pages
         run: |
-          mkdir public
-          cp -r artifacts/semgrep-report/* public/semgrep/
-          cp -r Bank/_site/* public/docs/
+          mkdir -p public/docs
+          mkdir -p public/semgrep
+          cp -r temp/docfx/* public/docs/
+          cp -r temp/semgrep/* public/semgrep/
 
-      - name: Deploy to GitHub Pages
+      - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+          publish_branch: gh-pages

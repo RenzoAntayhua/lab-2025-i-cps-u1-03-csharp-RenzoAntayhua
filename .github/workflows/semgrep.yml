@@ -39,17 +39,3 @@ jobs:
         with:
           name: semgrep-report
           path: ./public
-
-  deploy:
-    needs: security
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v3
-
-      - name: Desplegar en GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
