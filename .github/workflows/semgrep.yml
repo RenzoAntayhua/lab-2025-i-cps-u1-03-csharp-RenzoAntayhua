@@ -27,6 +27,7 @@ jobs:
 
       - name: Convert semgrep.json to HTML
         run: prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep
+        shell: bash
 
       - name: Mover reporte HTML a carpeta para GitHub Pages
         run: |
