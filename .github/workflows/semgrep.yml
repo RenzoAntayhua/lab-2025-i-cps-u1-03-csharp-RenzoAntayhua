@@ -18,8 +18,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Instalar Semgrep y prospector2html
-        run: |
-          pip install semgrep prospector2html
+        run: pip install semgrep prospector2html
 
       - name: Ejecutar Semgrep y generar archivo JSON
         run: semgrep scan --config="p/default" --json --output semgrep.json --metrics=off

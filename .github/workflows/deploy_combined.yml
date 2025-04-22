@@ -26,6 +26,7 @@ jobs:
         with:
           name: docfx-docs
           path: temp/docfx
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Descargar artefactos de Semgrep
         uses: actions/download-artifact@v4
