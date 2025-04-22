@@ -1,0 +1,51 @@
+name: Semgrep Analysis
+env:
+  DOTNET_VERSION: '8.x'                     # la versión de .NET
+on: push
+
+permissions:
+  contents: read
+  security-events: write
+  pages: write
+  id-token: write
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.10-slim  # Necesitamos Python para instalar herramientas
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Semgrep y prospector2html
+        run: |
+          pip install semgrep prospector2html
+
+      - name: Ejecutar Semgrep y generar archivo JSON
+        run: |
+          semgrep scan --config="p/default" --json --output semgrep.json --metrics=off
+          prospector-html --input semgrep.json --output semgrep-report.html --filter semgrep
+
+      - name: Mover reporte HTML a carpeta para GitHub Pages
+        run: |
+          mkdir -p public
+          mv semgrep-report.html public/index.html
+
+      - name: Subir artefacto para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: security
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v3
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
